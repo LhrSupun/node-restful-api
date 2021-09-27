@@ -42,7 +42,7 @@ router.get('/:productID',(req , res , next ) => {
     .then(doc => {
         console.log('from database',doc);
         res.status(200).json({
-            error: doc
+            product: doc
         });
     })
     .catch(err => {
