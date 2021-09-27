@@ -1,9 +1,15 @@
 const express = require('express');
 const morgan = require('morgan')
 const app = express();
+const bodyParser = require ('body-parser');
 
 //logging
 app.use(morgan('dev'));
+//body parse
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+
 //routes
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders')
