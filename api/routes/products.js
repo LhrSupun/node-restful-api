@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require ('mongoose');
+
+//import model
+const Product = require('../model/product')
 
 router.get('/',(req , res, next) => {
     res.status(200).json({
@@ -8,29 +12,46 @@ router.get('/',(req , res, next) => {
 });
 
 router.post('/',(req , res, next) => {
-    const product = {
-        name: req.body.name
-    }
-    res.status(201).json({
-        message: 'POST working products',
-        product: product
+    const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        price: req.body.price
     });
+    product
+    .save()
+    .then(result => {
+        res.status(201).json({
+            message: 'POST working products',
+            product: result
+        });
+        console.log(result);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+    
 });
 
 router.get('/:productID',(req , res , next ) => {
     const id = req.params.productID;
-    if ( id === 'special') {
+    Product.findById(id)
+    .exec()
+    .then(doc => {
+        console.log('from database',doc);
         res.status(200).json({
-            message: 'Special Property',
-            id: id
+            error: doc
         });
-    } else {
-        res.status(200).json({
-            message: 'You passed some id:}',
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
         });
-    }
-
-})
+    })
+});
 
 router.patch('/:productID',(req , res, next) => {
     res.status(200).json({
