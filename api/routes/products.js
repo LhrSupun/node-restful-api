@@ -91,7 +91,12 @@ router.patch('/:productID',(req , res, next) => {
         console.log(result);
         res.status(200).json(result);
     })
-    .catch()
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    })
 });
 
 router.delete('/:productID',(req , res, next) => {
