@@ -12,7 +12,8 @@ mongoose.connect(
     `mongodb+srv://${process.env.MONGO_ATLAS_USER}:${process.env.MONGO_ATLAS_PW}@cluster0.wljvb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
     {
     useNewUrlParser: true, 
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
     }
 )
 

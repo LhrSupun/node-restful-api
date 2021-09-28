@@ -5,6 +5,8 @@ const multer = require ('multer');
 
 //import model
 const Product = require('../models/product')
+//import middleware
+const checkAuth = require('../middleware/check-auth')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -66,7 +68,7 @@ router.get('/',(req , res, next) => {
     });
 });
 
-router.post('/', upload.single('productImage'),(req ,res, next) => {
+router.post('/',checkAuth, upload.single('productImage') ,(req ,res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -97,7 +99,7 @@ router.post('/', upload.single('productImage'),(req ,res, next) => {
     
 });
 
-router.get('/:productID',(req , res , next ) => {
+router.get('/:productID',checkAuth,(req , res , next ) => {
     const id = req.params.productID;
     Product.findById(id)
     .select('name price _id productImage')
@@ -122,7 +124,7 @@ router.get('/:productID',(req , res , next ) => {
     })
 });
 
-router.patch('/:productID',(req , res, next) => {
+router.patch('/:productID',checkAuth,(req , res, next) => {
     const id = req.params.productID;
     const updateOps = {};
     for ( const ops of req.body) {
@@ -144,7 +146,7 @@ router.patch('/:productID',(req , res, next) => {
     })
 });
 
-router.delete('/:productID',(req , res, next) => {
+router.delete('/:productID',checkAuth,(req , res, next) => {
     const id = req.params.productID;
     Product.remove({_id: id})
     .exec()
