@@ -4,8 +4,7 @@ const app = express();
 const bodyParser = require ('body-parser');
 const mongoose = require ('mongoose');
 
-//logging
-app.use(morgan('dev'));
+
 
 //DB connect
 mongoose.connect(
@@ -16,9 +15,13 @@ mongoose.connect(
     }
 )
 
+
+//logging
+app.use(morgan('dev'));
 //body parse
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use('/uploads', express.static('uploads'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //CORS
 app.use((req, res, next) => {
