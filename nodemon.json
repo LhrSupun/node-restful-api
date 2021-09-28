@@ -1,6 +1,7 @@
 {
     "env": {
         "MONGO_ATLAS_PW":"Bgy538GHUwh5268",
-        "MONGO_ATLAS_USER":"bgUserq"
+        "MONGO_ATLAS_USER":"bgUserq",
+        "JWT_KEY": "JewTkey75GW"
     }
 }
