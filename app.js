@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const app = express();
 const bodyParser = require ('body-parser');
 const mongoose = require ('mongoose');
+const path = require ('path')
 
 
 
@@ -18,8 +19,8 @@ mongoose.connect(
 
 //logging
 app.use(morgan('dev'));
-//body parse
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+//body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -37,16 +38,18 @@ app.use((req, res, next) => {
         );
         return res.status(200).json({});
     }
-    next();
+    next()
 });
 
 //routes
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders')
+const userRoutes = require('./api/routes/user')
 
 //middleware created by me
 app.use('/products',productRoutes);
 app.use('/orders',orderRoutes);
+app.use('/user',userRoutes);
 
 //error handleing
 app.use((req, res , next) =>{
@@ -57,10 +60,11 @@ app.use((req, res , next) =>{
 
 //capture error object
 app.use((error ,req ,res , next) => {
+    console.log(error)
     res.status(error.status || 500 );
     res.json({
         error: {
-            message: error.message
+            message: error.message,
         }
     });
 });
