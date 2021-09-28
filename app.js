@@ -9,7 +9,7 @@ app.use(morgan('dev'));
 
 //DB connect
 mongoose.connect(
-    'mongodb+srv://bgUserq:' + process.env.MONGO_ATLAS_PW + '@cluster0.wljvb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    `mongodb+srv://${process.env.MONGO_ATLAS_USER}:${process.env.MONGO_ATLAS_PW}@cluster0.wljvb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
     {
     useNewUrlParser: true, 
     useUnifiedTopology: true
