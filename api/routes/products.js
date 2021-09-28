@@ -3,20 +3,28 @@ const router = express.Router();
 const mongoose = require ('mongoose');
 
 //import model
-const Product = require('../model/product')
+const Product = require('../models/product')
 
 router.get('/',(req , res, next) => {
     Product.find()
+    .select('name price _id')
     .exec()
     .then(docs => {
-        console.log(docs,docs.lengt);
-       // if (docs.length >= 0) {
-            res.status(200).json(docs);
-        // } else {
-        //     res.status(404).json({
-        //         message: "No data found"
-        //     });
-        // }
+        const response = {
+            count: docs.length,
+            products: docs.map(doc => {
+                return {
+                    name: doc.name,
+                    price: doc.price,
+                    _id: doc._id,
+                    request: {
+                        type: 'GET',
+                        url: `http://localhost:3000/products/${doc._id}`
+                    }
+                }
+            })
+        }
+        res.status(200).json(response);
     })
     .catch(err => {
         console.log(err);
@@ -37,7 +45,15 @@ router.post('/',(req , res, next) => {
     .then(result => {
         res.status(201).json({
             message: 'POST working products',
-            product: result
+            Createdproduct: {
+                name: result.name,
+                price: result.price,
+                _id: result._id,
+                request: {
+                    type: 'GET',
+                    url: `http://localhost:3000/products/${result._id}`
+                }
+            }
         });
         console.log(result);
     })
@@ -53,6 +69,7 @@ router.post('/',(req , res, next) => {
 router.get('/:productID',(req , res , next ) => {
     const id = req.params.productID;
     Product.findById(id)
+    .select('name price _id')
     .exec()
     .then(doc => {
         console.log('from database',doc);
@@ -65,15 +82,12 @@ router.get('/:productID',(req , res , next ) => {
                 message: 'No Valid ID'
             })
         }
-        res.status(200).json({
-            product: doc
-        });
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({
-            error: err
-        });
+            res.status(200).json({
+                error: err
+            });
     })
 });
 
