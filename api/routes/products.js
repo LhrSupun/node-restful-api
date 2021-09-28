@@ -1,9 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require ('mongoose');
+const multer = require ('multer');
 
 //import model
 const Product = require('../models/product')
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './uploads/')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = new Date().toISOString()
+      cb(null, uniqueSuffix + file.originalname)
+    }
+  })
+
+const upload = multer({ storage: storage })
+
+
 
 router.get('/',(req , res, next) => {
     Product.find()
@@ -34,7 +49,7 @@ router.get('/',(req , res, next) => {
     });
 });
 
-router.post('/',(req , res, next) => {
+router.post('/', upload.single('productImage'),(req ,res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -44,7 +59,7 @@ router.post('/',(req , res, next) => {
     .save()
     .then(result => {
         res.status(201).json({
-            message: 'POST working products',
+            message: 'product added',
             Createdproduct: {
                 name: result.name,
                 price: result.price,
@@ -55,10 +70,8 @@ router.post('/',(req , res, next) => {
                 }
             }
         });
-        console.log(result);
     })
     .catch(err => {
-        console.log(err);
         res.status(500).json({
             error: err
         });
