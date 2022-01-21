@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "lint": "eslint \"./src/**/*.js\" server.js  --fix",
+    "lint": "eslint --ext .ts src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lahiru Supun",
